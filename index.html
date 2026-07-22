@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IVPH — Image/Video Processing Hub</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">IV</div>
+        <div>
+          <h1>IVPH</h1>
+          <p>Image / Video Processing Hub — extract frames from any video</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- STEP 1: SOURCE -->
+      <section class="card">
+        <div class="card-head">
+          <span class="step-badge">1</span>
+          <h2>Choose your video source</h2>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="upload-tab">Upload File</button>
+          <button class="tab-btn" data-tab="url-tab">Video URL</button>
+        </div>
+
+        <div id="upload-tab" class="tab-panel active">
+          <label class="dropzone" id="dropzone">
+            <input type="file" id="fileInput"
+                   accept=".mp4,.mov,.avi,.mkv,.webm,.flv,.wmv,.m4v,.3gp,.mpeg,.mpg,.vid,.ts">
+            <div class="dropzone-inner">
+              <div class="dz-icon">⬆</div>
+              <p><strong>Click to browse</strong> or drag & drop a video file</p>
+              <p class="muted">Supports .mp4, .mov, .avi, .mkv, .webm, .flv, .wmv, .m4v, .3gp, .vid and more</p>
+            </div>
+          </label>
+          <button id="uploadBtn" class="btn primary" disabled>Upload Video</button>
+        </div>
+
+        <div id="url-tab" class="tab-panel">
+          <label for="urlInput" class="field-label">Paste a video link</label>
+          <input type="text" id="urlInput" class="text-input"
+                 placeholder="https://www.youtube.com/watch?v=... or Dailymotion, Vimeo, etc.">
+          <p class="muted">Works with YouTube, Dailymotion, Vimeo, and most public video platforms.</p>
+          <button id="fetchUrlBtn" class="btn primary">Fetch Video</button>
+        </div>
+
+        <div id="sourceStatus" class="status-box hidden"></div>
+      </section>
+
+      <!-- STEP 2: SETTINGS -->
+      <section class="card" id="settingsCard" style="display:none;">
+        <div class="card-head">
+          <span class="step-badge">2</span>
+          <h2>Extraction settings</h2>
+        </div>
+
+        <div class="settings-grid">
+          <div class="field">
+            <label for="intervalValue" class="field-label">Capture every</label>
+            <div class="inline-input">
+              <input type="number" id="intervalValue" class="text-input" value="1" min="0.001" step="0.001">
+              <select id="intervalUnit" class="select-input">
+                <option value="seconds" selected>Seconds</option>
+                <option value="milliseconds">Milliseconds</option>
+              </select>
+            </div>
+            <p class="muted" id="fpsHint"></p>
+          </div>
+
+          <div class="field">
+            <label for="formatSelect" class="field-label">Image format</label>
+            <select id="formatSelect" class="select-input">
+              <option value="png" selected>PNG (lossless)</option>
+              <option value="jpg">JPG</option>
+              <option value="jpeg">JPEG</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="extractBtn" class="btn primary large">Extract Frames</button>
+
+        <div class="progress-wrap hidden" id="progressWrap">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <p class="muted" id="progressLabel">Processing video…</p>
+        </div>
+      </section>
+
+      <!-- STEP 3: RESULT -->
+      <section class="card" id="resultCard" style="display:none;">
+        <div class="card-head">
+          <span class="step-badge">3</span>
+          <h2>Download your frames</h2>
+        </div>
+        <div class="result-box">
+          <p id="resultSummary"></p>
+          <a id="downloadLink" class="btn success" href="#" download>Download ZIP</a>
+        </div>
+      </section>
+
+      <div id="errorBox" class="error-box hidden"></div>
+
+    </main>
+
+    <footer class="footer">
+      <p>IVPH · Local frame extraction tool · Runs entirely on your machine</p>
+    </footer>
+  </div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
